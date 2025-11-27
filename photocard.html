@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Astha Bangla News - Card Maker</title>
+    <link href="https://fonts.maateen.me/kalpurush/font.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            min-height: 100vh;
+            font-family: 'Kalpurush', sans-serif;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .main-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 24px;
+            padding: 0 10px;
+        }
+
+        .main-header h1 {
+            font-size: clamp(1.6rem, 5vw, 2.5rem);
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-header p {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            opacity: 0.9;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .controls h2 {
+            margin-bottom: 16px;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+            font-family: 'Kalpurush', sans-serif;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            font-family: 'Kalpurush', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-download {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .preview-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .preview-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+
+        .card-preview {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        .card-header {
+            background: #014879;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .page-logo {
+            width: 80px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: clamp(0.85rem, 3.5vw, 0.95rem);
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 0;
+            padding-top: 58.33%; /* 350px / 600px = 58.33% → responsive aspect ratio */
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
+            overflow: hidden;
+            position: relative;
+            border-top: 8px solid #014879;
+            border-bottom: 8px solid #014879;
+        }
+
+        .main-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-border {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #ff6b35 0%, #f7931e 50%, #ff6b35 100%);
+        }
+
+        .news-text {
+            padding: 20px 20px 24px;
+            background: white;
+        }
+
+        .news-headline {
+            font-size: clamp(1.3rem, 6vw, 1.6rem);
+            font-weight: bold;
+            color: #222;
+            line-height: 1.4;
+            text-align: center;
+            word-break: break-word;
+        }
+
+.card-footer {
+    background: white;
+    padding: 14px 16px;
+    text-align: center;
+    border-top: 2px solid #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* Existing Badge */
+.footer-badge {
+    background: #f7f7f7;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+    color: #666;
+    border: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+/* Search Icon */
+.footer-icon {
+    background: #333;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex: 0 0 auto;
+}
+
+/* Social Item Box */
+.social-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f7f7f7;
+    padding: 6px 12px;
+    border-radius: 25px;
+    border: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+/* Social Logo Image */
+.social-logo {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.social-name {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+    color: #444;
+}
+
+
+        .footer-website {
+            font-weight: bold;
+            color: #333;
+            font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+
+        /* Desktop adjustment */
+        @media (min-width: 769px) {
+            .workspace {
+                grid-template-columns: 1fr 1.8fr;
+                gap: 24px;
+            }
+
+            .controls, .preview-section {
+                padding: 28px;
+            }
+
+            .card-header,
+            .card-footer {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Smaller mobile */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .main-header h1 {
+                font-size: clamp(1.4rem, 6vw, 2rem);
+            }
+
+            .btn {
+                padding: 16px;
+            }
+
+            .card-preview {
+                max-width: 100%;
+            }
+            
+            .footer-website {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-header">
+            <h1>Astha Bangla News - Card Maker</h1>
+            <p>সোশ্যাল মিডিয়ার জন্য পেশাদার সংবাদ কার্ড তৈরি করুন</p>
+        </div>
+
+        <div class="workspace">
+            <div class="controls">
+                <h2>কার্ড কাস্টমাইজ করুন</h2>
+
+                <div class="form-group">
+                    <label>মূল ছবি আপলোড করুন</label>
+                    <input type="file" id="mainImage" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label>সংবাদ শিরোনাম</label>
+                    <textarea id="headline" rows="3" placeholder="আপনার সংবাদের শিরোনাম লিখুন..."></textarea>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label>ফুটার ওয়েবসাইট</label>
+                    <input type="text" id="footerText" placeholder="https://www.facebook.com/asthanewsbangla" value="https://www.facebook.com/asthanewsbangla">
+                </div> -->
+
+                <button class="btn btn-download" onclick="downloadCard()">কার্ড ডাউনলোড করুন</button>
+                <button class="btn btn-reset" onclick="resetAll()">সব রিসেট করুন</button>
+            </div>
+
+            <div class="preview-section">
+                <h2>প্রিভিউ</h2>
+                <div class="card-preview" id="cardPreview">
+                    <div class="card-header">
+                        <div class="page-logo">
+                            <img src="./images/logo.png" alt="Astha Bangla News">
+                        </div>
+                        <div class="date-badge" id="dateDisplay"></div>
+                    </div>
+
+                    <div class="main-image" id="mainImagePreview">
+                        ছবি আপলোড করুন
+                    </div>
+
+                    <div class="image-border"></div>
+
+                    <div class="news-text">
+                        <div class="news-headline" id="headlinePreview">
+                            আপনার সংবাদের শিরোনাম এখানে লিখুন
+                        </div>
+                    </div>
+
+<div class="card-footer">
+
+    <div class="footer-badge">বিস্তারিত কমেন্টে</div>
+    <div class="footer-icon">🔍</div>
+
+    <div class="social-item">
+        <img src="images/facebook.png" class="social-logo" alt="Facebook">
+        <span class="social-name">asthanewsbn</span>
+    </div>
+
+    <div class="social-item">
+        <img src="images/instagram.png" class="social-logo" alt="Instagram">
+        <span class="social-name">asthanewsbn</span>
+    </div>
+
+    <div class="social-item">
+        <img src="images/youtube.png" class="social-logo" alt="YouTube">
+        <span class="social-name">Astha Bangla TV</span>
+    </div>
+
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        // Bengali numerals & months
+        const bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        const bengaliMonths = ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 
+                               'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'];
+
+        // Convert number to Bengali digits
+        function toBengaliNumber(num) {
+            return num.toString().split('').map(d => bengaliNumerals[parseInt(d)]).join('');
+        }
+
+        // Set today's date in Bengali (e.g., "২৭ নভেম্বর ২০২৫")
+        function setBengaliDate() {
+            const today = new Date();
+            const day = toBengaliNumber(today.getDate());
+            const month = bengaliMonths[today.getMonth()];
+            const year = toBengaliNumber(today.getFullYear());
+            document.getElementById('dateDisplay').textContent = `${day} ${month} ${year}`;
+        }
+
+        // Initialize
+        setBengaliDate();
+
+        // Main image upload handler
+        document.getElementById('mainImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('mainImagePreview').innerHTML = 
+                        `<img src="${event.target.result}" alt="Main Image">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Headline sync
+        document.getElementById('headline').addEventListener('input', function() {
+            const preview = document.getElementById('headlinePreview');
+            preview.textContent = this.value.trim() || 'আপনার সংবাদের শিরোনাম এখানে লিখুন';
+        });
+
+        // Footer text sync
+        document.getElementById('footerText').addEventListener('input', function() {
+            const preview = document.getElementById('footerPreview');
+            preview.textContent = this.value.trim() || 'https://www.facebook.com/asthanewsbangla';
+        });
+
+        // Download card as PNG
+        function downloadCard() {
+            const card = document.getElementById('cardPreview');
+            // Show toast or disable during render
+            const originalText = document.querySelector('.btn-download').textContent;
+            document.querySelector('.btn-download').textContent = 'তৈরি হচ্ছে...';
+
+            html2canvas(card, {
+                scale: devicePixelRatio >= 2 ? 2 : 1.5,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                windowHeight: card.offsetHeight * 2,
+                windowWidth: card.offsetWidth * 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `astha-bangla-news-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png', 0.95);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                document.querySelector('.btn-download').textContent = originalText;
+            }).catch(err => {
+                console.error('Download failed:', err);
+                alert('কার্ড ডাউনলোডে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                document.querySelector('.btn-download').textContent = originalText;
+            });
+        }
+
+        // Reset all fields
+        function resetAll() {
+            if (confirm('আপনি কি সত্যিই সব রিসেট করতে চান?')) {
+                document.getElementById('mainImage').value = '';
+                document.getElementById('headline').value = '';
+                document.getElementById('footerText').value = 'https://www.facebook.com/asthanewsbangla';
+
+                document.getElementById('mainImagePreview').innerHTML = 'ছবি আপলোড করুন';
+                document.getElementById('headlinePreview').textContent = 'আপনার সংবাদের শিরোনাম এখানে লিখুন';
+                document.getElementById('footerPreview').textContent = 'https://www.facebook.com/asthanewsbangla';
+                setBengaliDate(); // Refresh date (in case page was open long)
+            }
+        }
+    </script>
+</body>
+</html>
