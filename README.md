@@ -2,6 +2,23 @@
 
 A professional Bengali news card generator for social media platforms. Create beautiful, branded news cards with custom headlines, images, and automatic date formatting in Bengali. Perfect for journalists, news agencies, and content creators.
 
+## Screenshots
+
+### Home Page
+![Home Page](report/screenshot_home.png)
+
+### Login & Registration
+<p align="center">
+  <img src="report/screenshot2.png" width="45%" alt="Login Page"/>
+  <img src="report/screenshot3.png" width="45%" alt="Registration Page"/>
+</p>
+
+### Card Maker Tool
+<p align="center">
+  <img src="report/screenshot4.png" width="45%" alt="Card Maker Input"/>
+  <img src="report/screenshot1.png" width="45%" alt="Card Maker Preview"/>
+</p>
+
 ## Features
 
 - 📰 Create professional news cards with custom headlines
@@ -55,18 +72,23 @@ cd astha-bangla-news
 6. Download as PNG
 
 ## File Structure
-
 ```
 ├── index.html          # Home page
 ├── login.html          # Login page
 ├── register.html       # Registration page
 ├── photocard.html      # Card maker tool
-├── images/            # Logo and social media icons
+├── images/             # Logo and social media icons
 │   ├── logo.png
 │   ├── facebook.png
 │   ├── instagram.png
 │   └── youtube.png
-└── README.md          # This file
+├── report/        # Project screenshots
+│   ├── screenshot_home.png
+│   ├── screenshot1.png
+│   ├── screenshot2.png
+│   ├── screenshot3.png
+│   └── screenshot4.png
+└── README.md           # This file
 ```
 
 ## Browser Support
