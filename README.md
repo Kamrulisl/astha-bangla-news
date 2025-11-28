@@ -82,7 +82,7 @@ cd astha-bangla-news
 │   ├── facebook.png
 │   ├── instagram.png
 │   └── youtube.png
-├── report/        # Project screenshots
+├── report/        # Project screenshots and Project Report
 │   ├── puc_logo.png
 │   ├── report.tex     #La-Tex format of Report
 │   ├── Project_Report.pdf
